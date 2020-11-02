@@ -19,7 +19,7 @@ class AddressController extends Controller
     {
         $user  =  Auth::user();
         $address =  address::all()->where('user_id','=',$user->id);
-        return response()->json(['data' => $address], $this->successStatus);
+        return response()->json(['result' => $address], $this->successStatus);
     }
 
     /**
@@ -60,7 +60,7 @@ class AddressController extends Controller
         $address->status = $request->status;
         $address->save();
         $success = "Success";
-        return response()->json(['status' => $success], $this->successStatus);    
+        return response()->json(['result' => $success], $this->successStatus);    
         // $address
 
     }
@@ -116,7 +116,7 @@ class AddressController extends Controller
         $address->save();
         
         $success = "Success";
-        return response()->json(['status' => $success], $this->successStatus);    
+        return response()->json(['result' => $success], $this->successStatus);    
     }
 
     /**
@@ -131,6 +131,6 @@ class AddressController extends Controller
         $address = address::find($id);  
         $address->delete();
         $success = "Success";
-        return response()->json(['status' => $success], $this->successStatus);    
+        return response()->json(['result' => $success], $this->successStatus);    
     }
 }

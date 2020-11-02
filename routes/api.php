@@ -32,6 +32,7 @@ Route::post('/register', [UserController::class, 'register']);
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/user/detail', [UserController::class, 'details']);
+	Route::get('/user/token', [UserController::class, 'getToken']);
     Route::post('/logout', [UserController::class, 'logout']);
 });
 

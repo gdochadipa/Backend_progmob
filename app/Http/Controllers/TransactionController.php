@@ -41,7 +41,7 @@ class TransactionController extends Controller
         $user  =  Auth::user();
         $this->update_transaction();
         $transaction = transaction::with('user')->where('user_id','=',$user->id)->orderBy('id', 'DESC')->get();
-        return response()->json(['data' => $transaction], $this->successStatus);
+        return response()->json(['result' => $transaction], $this->successStatus);
     }
 
     /**
@@ -98,10 +98,10 @@ class TransactionController extends Controller
             $getTrans->total = $total;
             $getTrans->save();
             $success = "Success";
-            return response()->json(['status' => $success], $this->successStatus);    
+            return response()->json(['result' => $success], $this->successStatus);    
         }else{
             $success = "Fail";
-            return response()->json(['status' => $success], 401);   
+            return response()->json(['result' => $success], 401);   
         }
     }
 
@@ -113,7 +113,7 @@ class TransactionController extends Controller
         $finishTime = Carbon::parse($transaction->timeout);
         $totalDuration = $finishTime->diffInSeconds($startTime);
         $time = gmdate('H : i : s', $totalDuration);
-        return response()->json(['data' => $transaction,'start_time' => $startTime,'finish_time'=> $finishTime,'total_duration'=> $totalDuration], $this->successStatus);
+        return response()->json(['result' => $transaction,'start_time' => $startTime,'finish_time'=> $finishTime,'total_duration'=> $totalDuration], $this->successStatus);
     }
 
     public function onConfirmation(Request $request)
@@ -123,7 +123,7 @@ class TransactionController extends Controller
         $transaction->status = $request->status;
         $transaction->save();
         $success = "Success";
-        return response()->json(['status' => $success], $this->successStatus);    
+        return response()->json(['result' => $success], $this->successStatus);    
     }
 // Req
 //     transaction_id
@@ -152,7 +152,7 @@ class TransactionController extends Controller
             }
         }
         $success = "Success";
-        return response()->json(['status' => $success], $this->successStatus);   
+        return response()->json(['result' => $success], $this->successStatus);   
 
     }
 

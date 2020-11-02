@@ -21,7 +21,7 @@ class CartController extends Controller
         $user = Auth::user();
         $cart = Cart::with(['user', 'book'])->where('user_id', '=', $user->id)->where('status', '=', 'notyet')->get();
         
-        return response()->json(['data' => $cart,'status'=>'Successfull'], $this->successStatus);
+        return response()->json(['result' => $cart,'status'=>'Successfull'], $this->successStatus);
     }
 
     /**
@@ -54,10 +54,10 @@ class CartController extends Controller
         if ($book->stock > 0 && $request->qty <= $book->stock) {
             if ($carts->save()) {
                 $status = 'success';
-                return response()->json(['status' => $status], $this->successStatus);
+                return response()->json(['result' => $status], $this->successStatus);
             }
         }
-        return response()->json(['status' => $status,'result'=>'books does not enough']);
+        return response()->json(['result' => $status,'result'=>'books does not enough']);
     }
 
     /**
@@ -100,7 +100,7 @@ class CartController extends Controller
             $carts->qty = $request->qty;
             $carts->save();
         }
-        return response()->json(['status' => 'Successfull'], $this->successStatus);
+        return response()->json(['result' => 'Successfull'], $this->successStatus);
     }
 
     /**

@@ -10,6 +10,10 @@ use App\Models\Book;
 use App\Models\cart;
 use App\Models\User;
 use App\Models\transaction_detail;
+use LaravelFCM\Message\OptionsBuilder;
+use LaravelFCM\Message\PayloadDataBuilder;
+use LaravelFCM\Message\PayloadNotificationBuilder;
+use LaravelFCM\Facades\FCM as FacadesFCM;
 
 class TransactionController extends Controller
 {
@@ -154,6 +158,72 @@ class TransactionController extends Controller
         $success = "Success";
         return response()->json(['result' => $success], $this->successStatus);   
 
+    }
+
+    public function verifiedPayment(Request $request){
+        // 'unverified','verified','delivered','success','expired','canceled'
+
+        $transaction = transaction::find($request->transaction_id);
+        $transaction->status = 'verified';
+        $user = User::find($transaction->user_id);
+
+        if($transaction->save()){
+            $optionBuilder = new OptionsBuilder();
+            $optionBuilder->setTimeToLive(60 * 20);
+
+            $notificationBuilder = new PayloadNotificationBuilder('Bookstore');
+            $notificationBuilder->setBody('Pembelian buku anda telah disetujui ')->setSound('default');
+
+            $dataBuilder = new PayloadDataBuilder();
+			$dataBuilder->addData(['data' => '{"title":"Bookstore" , "message":"Pembelian buku anda telah disetujui"}']);
+
+            $option = $optionBuilder->build();
+            $notification = $notificationBuilder->build();
+            $data = $dataBuilder->build();
+
+            $token = $user->fcm_token;
+
+
+            $downstreamResponse = FacadesFCM::sendTo($token, $option, $notification, $data);
+
+            return response()->json(['result' => $token], $this->successStatus);  
+        }
+
+        return response()->json(['result' => 'Failed'], $this->successStatus);  
+        
+
+    }
+
+    public function verifiedDelivered(Request $request)
+    {
+        // 'unverified','verified','delivered','success','expired','canceled'
+
+        $transaction = transaction::find($request->transaction_id);
+        $transaction->status = 'delivered';
+        $user = User::find($transaction->user_id);
+
+        if ($transaction->save()) {
+            $optionBuilder = new OptionsBuilder();
+            $optionBuilder->setTimeToLive(60 * 20);
+
+            $notificationBuilder = new PayloadNotificationBuilder('Bookstore');
+            $notificationBuilder->setBody('Pengiriman sedang berjalan')->setSound('default');
+
+            $dataBuilder = new PayloadDataBuilder();
+			$dataBuilder->addData(['data' => '{"title":"Bookstore" , "message":"Pengiriman sedang berjalan"}']);
+
+            $option = $optionBuilder->build();
+            $notification = $notificationBuilder->build();
+            $data = $dataBuilder->build();
+
+            $token = $user->fcm_token;
+
+            $downstreamResponse = FacadesFCM::sendTo($token, $option, $notification, $data);
+
+            return response()->json(['result' => $token], $this->successStatus);
+        }
+
+        return response()->json(['result' => 'Failed'], $this->successStatus);
     }
 
     /**

@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use LaravelFCM\Message\OptionsBuilder;
+use LaravelFCM\Message\PayloadDataBuilder;
+use LaravelFCM\Message\PayloadNotificationBuilder;
+use LaravelFCM\Facades\FCM as FacadesFCM;
 
 class UserController extends Controller
 {
@@ -79,5 +83,46 @@ class UserController extends Controller
 		$success['token'] =  $user->createToken('nApp')->accessToken;
 		$success['name'] =  $user->name;
 		return response()->json(['result' => $success['name'],'status'=>'Success'], $this->successStatus);
-	}
+    }
+    
+    public function updateTokenFCM(Request $request){
+        $user = Auth::user();
+        $user_get = User::find($user->id);
+        $validator = Validator::make($request->all(), [
+            'fcm_token' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'message' => $validator->errors()], $this->successStatus);
+        }
+
+        $user_get->fcm_token = $request->fcm_token;
+        $user_get->save();
+        return response()->json(['result' => $user->name, 'status' => 'Success'], $this->successStatus);
+    }
+	
+	
+    public function testingSendNotification(){
+        $user = Auth::user();
+        $optionBuilder = new OptionsBuilder();
+        $optionBuilder->setTimeToLive(60 * 20);
+
+        $notificationBuilder = new PayloadNotificationBuilder('my title');
+        $notificationBuilder->setBody('Hello world')->setSound('default');
+		
+		
+        $dataBuilder = new PayloadDataBuilder();
+        $dataBuilder->addData(['data' => '{"title":"testing","message":"testing"}']);
+
+        $option = $optionBuilder->build();
+        $notification = $notificationBuilder->build();
+        $data = $dataBuilder->build();
+
+        $token = $user->fcm_token;
+
+        $downstreamResponse = FacadesFCM::sendTo($token, $option, $notification, $data);
+
+        return response()->json(['result' => $downstreamResponse, 'status' => 'Success'], $this->successStatus);
+
+    } 
 }

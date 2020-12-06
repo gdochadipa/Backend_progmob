@@ -24,7 +24,8 @@ use App\Http\Controllers\TransactionController;
 // });
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
-
+Route::post('/transaction/verified', [TransactionController::class, 'verifiedPayment']);
+Route::post('/transaction/delivered', [TransactionController::class, 'verifiedDelivered']);
 // Route::group(['middleware' => 'auth:api'], function () {
 //     Route::get('user/detail', 'Api/UserController@details');
 //     Route::post('logout', 'AApi/serController@logout');
@@ -34,6 +35,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/user/detail', [UserController::class, 'details']);
 	Route::get('/user/token', [UserController::class, 'getToken']);
     Route::post('/logout', [UserController::class, 'logout']);
+    Route::post('/updateToken', [UserController::class, 'updateTokenFCM']);
+    Route::get('/user/testNotification', [UserController::class, 'testingSendNotification']);
+    
 });
 
 Route::group(['middleware' => ['auth:api']], function () {

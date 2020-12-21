@@ -24,6 +24,12 @@ class CartController extends Controller
         return response()->json(['result' => $cart,'status'=>'Successfull'], $this->successStatus);
     }
 
+    public function getCart($id)
+    {
+       $cart = Cart::find($id);
+       return response()->json(['result' => $cart, 'status' => 'Successfull'], $this->successStatus);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

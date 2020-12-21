@@ -49,6 +49,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/cart', [CartController::class, 'index']);
+    Route::get('/cart/{id}', [CartController::class, 'getCart']);
     Route::post('/cart', [CartController::class, 'store']);
     Route::put('/cart/{id}', [CartController::class, 'update']);
     Route::delete('/cart/{id}', [CartController::class, 'destroy']);

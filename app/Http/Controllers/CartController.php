@@ -19,8 +19,8 @@ class CartController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $cart = Cart::with(['user', 'book'])->where('user_id', '=', $user->id)->where('status', '=', 'notyet')->get();
-        
+        // $cart = Cart::with(['user', 'book'])->where('user_id', '=', $user->id)->where('status', '=', 'notyet')->get();
+        $cart = Cart::where('user_id', '=', $user->id)->where('status', '=', 'notyet')->get();
         return response()->json(['result' => $cart,'status'=>'Successfull'], $this->successStatus);
     }
 

@@ -18,6 +18,12 @@ class BookController extends Controller
         return response()->json(['result'=> $data, 'status' => 'successfull']);
     }
 
+    public function getBook($id)
+    {
+        $data  =  Book::find($id);
+        return response()->json(['result' => $data, 'status' => 'successfull']);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

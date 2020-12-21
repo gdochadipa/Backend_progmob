@@ -62,7 +62,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/transaction/cancel', [TransactionController::class, 'onCanceled']);
 });
 
-
+Route::get('/book/{id}', [BookController::class, 'getBook']);
 Route::get('/books', [BookController::class, 'index']);
 Route::post('/books', [BookController::class, 'create']);
 Route::put('/books/{id}', [BookController::class, 'update']);

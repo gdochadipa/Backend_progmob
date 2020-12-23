@@ -37,7 +37,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/logout', [UserController::class, 'logout']);
     Route::post('/updateToken', [UserController::class, 'updateTokenFCM']);
     Route::get('/user/testNotification', [UserController::class, 'testingSendNotification']);
-    
+    Route::post('/user/update', [UserController::class, 'updateUser']);
 });
 
 Route::group(['middleware' => ['auth:api']], function () {

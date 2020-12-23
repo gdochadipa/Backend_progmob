@@ -49,7 +49,7 @@ class AddressController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 401);
+            return response()->json(['result' => $validator->errors()], $this->successStatus);
         }
         
         $address =  new address();
@@ -106,7 +106,7 @@ class AddressController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 401);
+            return response()->json(['result' => $validator->errors()], $this->successStatus);
         }
         
         $address->address = $request->address;

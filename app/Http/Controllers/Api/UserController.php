@@ -125,4 +125,26 @@ class UserController extends Controller
         return response()->json(['result' => $downstreamResponse, 'status' => 'Success'], $this->successStatus);
 
     } 
+
+    public function updateUser(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'message' => $validator->errors()], $this->successStatus);
+        }
+
+        $getuser = Auth::user();
+        $user  = User::find($getuser->id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if($user->save()){
+            return response()->json(['result' => $user->name, 'status' => 'Success'], $this->successStatus);
+        }
+
+    }
 }

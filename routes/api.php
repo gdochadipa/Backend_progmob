@@ -38,6 +38,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/updateToken', [UserController::class, 'updateTokenFCM']);
     Route::get('/user/testNotification', [UserController::class, 'testingSendNotification']);
     Route::post('/user/update', [UserController::class, 'updateUser']);
+    Route::post('/user/update/profile', [UserController::class, 'updateProfile']);
 });
 
 Route::group(['middleware' => ['auth:api']], function () {

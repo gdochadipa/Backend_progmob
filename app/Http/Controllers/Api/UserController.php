@@ -147,4 +147,25 @@ class UserController extends Controller
         }
 
     }
+
+    public function updateProfile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'photo_profile' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'message' => $validator->errors()], $this->successStatus);
+        }
+
+        $getuser = Auth::user();
+        $user  = User::find($getuser->id);
+        $user->photo_profile = $request->photo_profile;
+        if ($user->save()) {
+            return response()->json(['result' => $user->name, 'status' => 'Success'], $this->successStatus);
+        }else{
+            return response()->json(['status' => 'error', 'status' => 'Failed'], $this->successStatus);
+        }
+        // photo_profile
+    }
 }

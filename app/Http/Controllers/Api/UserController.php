@@ -52,11 +52,19 @@ class UserController extends Controller
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
-		$input['image_profile'] = "TEST";
-		//dd($input);
-        $user = User::create($input);
-        $success['token'] =  $user->createToken('nApp')->accessToken;
-        $success['name'] =  $user->name;
+        // dd($input);
+        $user = new User();
+        $user->name = $input['name'];
+        $user->password = $input['password'];
+        $user->email = $input['email'];
+        $user->photo_profile = "https://firebasestorage.googleapis.com/v0/b/progmob-pratikum-7.appspot.com/o/user.png?alt=media&token=ff20317c-ac36-4ba5-b78f-60010f8f2734";
+        
+        if($user->save()){
+            $success['token'] =  $user->createToken('nApp')->accessToken;
+            $success['name'] =  $user->name;
+        }
+
+        
 
         return response()->json(['result' => $success['name'],'status'=>'Success'], $this->successStatus);
     }
